@@ -1,0 +1,64 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>~Server Metrics Dashboard~</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #0e1117;
+      color: #e6edf3;
+      padding: 20px;
+    }
+    h2 { color: #58a6ff; }
+    pre {
+      background: #161b22;
+      padding: 10px;
+      border-radius: 8px;
+      overflow: auto;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Live Server Monitor</h1>
+
+  <div class="section">
+    <h2>Metrics:-</h2>
+    <pre id="metrics">Loading...</pre>
+  </div>
+
+  <div class="section">
+    <h2>Node Health:-</h2>
+    <pre id="nodes">Loading...</pre>
+  </div>
+
+  <div class="section">
+    <h2>ASCII Graph:</h2>
+    <pre id="graph">Loading...</pre>
+  </div>
+
+  <script>
+    async function fetchAndUpdate(id, path) {
+      try {
+        const res = await fetch(path);
+        const text = await res.text();
+        document.getElementById(id).textContent = text;
+      } catch (err) {
+        document.getElementById(id).textContent = "Error fetching " + path;
+      }
+    }
+
+    function refreshAll() {
+      fetchAndUpdate("metrics", "/metrics");
+      fetchAndUpdate("nodes", "/nodes");
+      fetchAndUpdate("graph", "/graph");
+    }
+
+    setInterval(refreshAll, 1000); // Every 1 second
+    refreshAll(); // Initial load
+  </script>
+</body>
+</html>
